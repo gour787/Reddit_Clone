@@ -3,6 +3,8 @@ const Schema = mongoose.Schema;
 
 const PostSchema = new Schema({
     title: String,
+    author: String,
+    community: String,
     text: String,
     upvote: Number,
     downvote: Number

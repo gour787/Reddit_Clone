@@ -1,0 +1,13 @@
+
+<% layout('layouts/boilerplate')%>
+
+    <h1>All Posts</h1>
+    <div>
+        <a href="/posts/new">Add post</a>
+    </div>
+    <ul>
+        <% for (let post of posts){%>
+        <li><a href="/posts/<%= post._id %>"><%= post.title %></a></li>
+        <% }%>
+    </ul>
+

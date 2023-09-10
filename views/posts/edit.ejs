@@ -1,0 +1,14 @@
+<% layout('layouts/boilerplate')%>
+
+
+    <h1>Edit post</h1>
+    <form action="/posts/<%=post._id%>?_method=PUT" method="POST">
+        <div>
+            <label for="title">Title</label>
+            <input type="text" id="title" name="post[title]" value="<%=post.title %>">
+        </div>
+
+        <button>Update post</button>
+    </form>
+    <a href="/posts/<%= post._id%>">Back To post</a>
+

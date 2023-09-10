@@ -1,0 +1,12 @@
+<% layout('layouts/boilerplate')%>
+
+<body>
+    <form action="/posts" method="POST">
+        <div>
+            <label for="title">Title</label>
+            <input type="text" id="title" name="post[title]">
+        </div>
+
+        <button>Add post</button>
+    </form>
+    <a href="/posts">All posts</a>
