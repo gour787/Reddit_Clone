@@ -23,7 +23,9 @@ const seedDB = async () => {
         const post = new Post({
             title: `Title ${i + 1}`,
             author: `author ${i + 1}`,
+            image: 'https://source.unsplash.com/collection/483251',
             text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            community: 'r/funny',
             upvote: Math.floor(Math.random() * 100), // random number
             downvote: Math.floor(Math.random() * 100) // random number
         });
@@ -32,9 +34,6 @@ const seedDB = async () => {
     }
 }
 
-
-
-seedDB();
 
 seedDB().then(() => {
     mongoose.connection.close();

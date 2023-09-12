@@ -3,13 +3,13 @@
 <body>
     <h1><%= post.title %></h1>
     <h2><%= post.author %></h2>
-    <p> <a href="/posts/<%=post._id%>/edit">Edit</a>
-    </p>
+    <p> <a href="/posts/<%= post._id %>/edit">Edit</a></p>
     <p>
-    <form action="/posts/<%=post._id%>?_method=DELETE" method="POST">
-        <button>Delete</button>
-    </form>
+        <form class="d-inline" action="/posts/<%=post._id%>?_method=DELETE" method="POST">
+            <button class="btn btn-danger">Delete</button>
+        </form>
     </p>
     <footer>
         <a href="/posts">All posts</a>
     </footer>
+</body>

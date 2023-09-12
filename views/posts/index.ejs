@@ -1,13 +1,68 @@
+<% layout('layouts/boilerplate') %>
 
-<% layout('layouts/boilerplate')%>
+<style>
+    .post-image {
+        max-height: 200px; 
+        width: auto;
+    }
 
-    <h1>All Posts</h1>
-    <div>
-        <a href="/posts/new">Add post</a>
+    .post-details {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+ 
+    /* Style the button to display an arrow icon with black text */
+    .post-buttons button {
+        border: none;
+        background-color: transparent;
+        padding: 5px;
+        cursor: pointer;
+        color: black; /* Set the text color to black */
+    }
+
+    /* Style the arrow icons */
+    .post-buttons button i {
+        font-size: 20px; /* Adjust the icon size as needed */
+    }
+
+    /* Style for the Upvotes and Downvotes text */
+    .post-buttons button span {
+        padding: 0 5px; /* Add some spacing around the text if needed */
+    }
+</style>
+
+<h1>All Posts</h1>
+<div>
+    <a href="/posts/new">Add Post</a>
+</div>
+<% for (let post of posts) { %>
+    <div class="card mb-3">
+        <div class="card-header">
+            Community: <%= post.community %>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <img class="img-fluid post-image" alt="" src="<%= post.image %>">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="/posts/<%= post._id %>"><%= post.title %></a>
+                    </h5>
+                    <p class="card-text"><%= post.text %></p>
+                    <p class="card-text">
+                        <small class="text-muted"><%= post.author %></small>
+                    </p>
+                </div>
+                <div class="card-footer post-details">
+                    <div class="post-buttons">
+                        <button class="btn btn-success"><i class="fas fa-arrow-up"></i><span>Upvotes:</span> <%= post.upvote %></button>
+                        <button class="btn btn-danger"><i class="fas fa-arrow-down"></i><span>Downvotes:</span> <%= post.downvote %></button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <ul>
-        <% for (let post of posts){%>
-        <li><a href="/posts/<%= post._id %>"><%= post.title %></a></li>
-        <% }%>
-    </ul>
-
+<% } %>

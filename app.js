@@ -36,30 +36,32 @@ app.get('/', (req, res) => {
     res.send('home')
 });
 
+
+
 app.get('/posts', async (req, res) => {
     const posts = await Post.find({});
     res.render('posts/index', { posts });
 });
 
 app.post('/posts', async (req, res) => {
-    const post = new Post(req.body.post); 
+    const post = new Post(req.body.post);
     await post.save();
     res.redirect(`/posts/${post._id}`);
 });
 
 app.get('/posts/:id', async (req, res) => {
-    const post = await Post.findById(req.params.id); 
+    const post = await Post.findById(req.params.id);
     res.render('posts/show', { post });
 });
 
 app.get('/posts/:id/edit', async (req, res) => {
-    const post = await Post.findById(req.params.id); 
+    const post = await Post.findById(req.params.id);
     res.render('posts/edit', { post });
 });
 
 app.put('/posts/:id', async (req, res) => {
     const { id } = req.params;
-    const post = await Post.findByIdAndUpdate(id, { ...req.body.post }); 
+    const post = await Post.findByIdAndUpdate(id, { ...req.body.post });
     res.redirect(`/posts/${post._id}`);
 });
 
@@ -68,7 +70,6 @@ app.delete('/posts/:id', async (req, res) => {
     await Post.findByIdAndDelete(id); 
     res.redirect('/posts');
 });
-
 
 app.listen(3000, () => {
     console.log("APP listening on port 3000")
