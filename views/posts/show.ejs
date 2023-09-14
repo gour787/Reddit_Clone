@@ -27,4 +27,39 @@
             </div>
         </div>
     </div>
+
+    <div class="col-10 offset-1"> 
+        <button class="btn btn-primary" id="toggleTextareaButton">Leave a Comment</button>
+        <form action="/posts/<%=post._id%>/comments" method="POST" class="mb-3 validated-form" novalidate id="commentForm" style="display: none;">
+            <div class="mb-3 mt-2" >
+                <label class="form-label" for="body">Comment</label>
+                <textarea class="form-control" name="comment[body]" id="body" cols="30" rows="3" required></textarea>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <button class="btn btn-success">Submit</button>
+        </form>
+        <% for(let comment of post.comments) { %>
+        <div class="card mb-3 mt-4 ">
+            <div class="card-body">
+                <p class="card-text">Comment: <%= comment.body %></p>
+                <form action="/posts/<%=post._id%>/comments/<%=comment._id%>?_method=DELETE" method="POST">
+                    <button class="btn btn-sm btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+        <% } %>
+    </div>
 </div>
+
+<script>
+    document.getElementById('toggleTextareaButton').addEventListener('click', function () {
+        var commentForm = document.getElementById('commentForm');
+        if (commentForm.style.display === 'none') {
+            commentForm.style.display = 'block';
+        } else {
+            commentForm.style.display = 'none';
+        }
+    });
+</script>

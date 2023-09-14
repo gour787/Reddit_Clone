@@ -8,17 +8,17 @@ const PostSchema = new Schema({
     community: String,
     text: String,
     upvote: Number,
-    downvote: Number
+    downvote: Number,
     // author: {
     //     type: Schema.Types.ObjectId,
     //     ref: 'User'
     // },
-    // reviews: [
-    //     {
-    //         type: Schema.Types.ObjectId,
-    //         ref: 'Review'
-    //     }
-    // ]
+    comments: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Comment'
+        }
+    ]
 });
 
 module.exports = mongoose.model('Post', PostSchema);
