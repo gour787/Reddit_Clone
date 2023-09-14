@@ -22,7 +22,7 @@ const seedDB = async () => {
     for (let i = 0; i < 5; i++) {
         const post = new Post({
             title: `Title ${i + 1}`,
-            author: `author ${i + 1}`,
+            author: `65037d965396d9d7bfac50f8`,
             image: 'https://source.unsplash.com/collection/483251',
             text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
             community: 'r/funny',

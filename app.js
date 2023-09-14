@@ -8,12 +8,13 @@ const Joi = require('joi');
 const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
-const Post = require('./models/post');
-const Comment = require('./models/comment');
-const { postSchema, commentSchema } = require('./schema.js');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user');
 
-const posts = require('./routes/posts');
-const comments = require('./routes/comments');
+const userRoutes = require('./routes/users');
+const postRoutes = require('./routes/posts');
+const commentRoutes = require('./routes/comments');
 
 
 
@@ -51,9 +52,16 @@ const sessionConfig = {
 app.use(session(sessionConfig))
 app.use(flash());
 
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 app.use((req, res, next) => {
-    // console.log(req.session)
-    // res.locals.currentUser = req.user;
+    console.log(req.session)
+    res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     next();
@@ -61,9 +69,9 @@ app.use((req, res, next) => {
 
 
 
-
-app.use('/posts', posts)
-app.use('/posts/:id/comments', comments)
+app.use('/', userRoutes)
+app.use('/posts', postRoutes)
+app.use('/posts/:id/comments', commentRoutes)
 
 
 app.get('/', (req, res) => {

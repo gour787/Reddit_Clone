@@ -5,6 +5,7 @@ const Post = require('../models/post');
 const Comment = require('../models/comment');
 
 const { commentSchema } = require('../schema.js');
+const { isLoggedIn } = require('../middleware');
 
 
 const ExpressError = require('../utils/ExpressError');

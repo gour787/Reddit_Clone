@@ -1,20 +1,21 @@
 <% layout('layouts/boilerplate') %>
 
 <div class="row">
-    <div class="col-10 offset-1"> <!-- Adjust column width to 4/5 of the screen -->
+    <div class="col-10 offset-1"> 
         <div class="card mb-3">
-            <!-- Move the title to the top as an h1 element -->
+            
             <div class="card-body">
                 <h1 class="card-title font-weight-bold"><%= post.title %></h1>
-                <!-- Place the author just below as a muted h4 element -->
-                <h4 class="card-text text-muted"><%= post.author %></h4>
+                
+                <h4 class="card-text text-muted">u/<%= post.author.username %></h4>
+
             </div>
             <img src="<%= post.image %>" class="card-img-top" alt="...">
             <div class="card-body">
                 <p class="card-text"><%= post.text %></p>
             </div>
             <ul class="list-group list-group-flush">
-                <!-- Adjust card structure as needed -->
+                
             </ul>
             <div class="card-body">
                 <a class="card-link btn btn-info" href="/posts/<%= post._id %>/edit">Edit</a>

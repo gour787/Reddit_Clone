@@ -5,6 +5,7 @@ const { postSchema } = require('../schema.js');
 
 const ExpressError = require('../utils/ExpressError');
 const Post = require('../models/post');
+const { isLoggedIn } = require('../middleware');
 
 const validatePost = (req, res, next) => {
     const { error } = postSchema.validate(req.body);
@@ -17,16 +18,16 @@ const validatePost = (req, res, next) => {
 }
 
 router.get('/', catchAsync(async (req, res) => {
-    const posts = await Post.find({});
+    const posts = await Post.find({}).populate('author');
     res.render('posts/index', { posts })
 }));
 
-router.get('/new', (req, res) => {
+router.get('/new', isLoggedIn, (req, res) => {
     res.render('posts/new');
 })
 
 
-router.post('/', validatePost, catchAsync(async (req, res, next) => {
+router.post('/', isLoggedIn, validatePost, catchAsync(async (req, res, next) => {
     const post = new Post(req.body.post);
     await post.save();
     req.flash('success', 'Successfully made a new post!');
@@ -34,7 +35,7 @@ router.post('/', validatePost, catchAsync(async (req, res, next) => {
 }))
 
 router.get('/:id', catchAsync(async (req, res,) => {
-    const post = await Post.findById(req.params.id).populate('comments');
+    const post = await Post.findById(req.params.id).populate('comments').populate('author');
     if (!post) {
         req.flash('error', 'Cannot find that post!');
         return res.redirect('/posts');
@@ -42,7 +43,7 @@ router.get('/:id', catchAsync(async (req, res,) => {
     res.render('posts/show', { post });
 }));
 
-router.get('/:id/edit', catchAsync(async (req, res) => {
+router.get('/:id/edit', isLoggedIn, catchAsync(async (req, res) => {
     const post = await Post.findById(req.params.id)
     if (!post) {
         req.flash('error', 'Cannot find that post!');
@@ -51,14 +52,14 @@ router.get('/:id/edit', catchAsync(async (req, res) => {
     res.render('posts/edit', { post });
 }))
 
-router.put('/:id', validatePost, catchAsync(async (req, res) => {
+router.put('/:id', validatePost, isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.params;
     const post = await Post.findByIdAndUpdate(id, { ...req.body.post });
     req.flash('success', 'Successfully updated post!');
     res.redirect(`/posts/${post._id}`)
 }));
 
-router.delete('/:id', catchAsync(async (req, res) => {
+router.delete('/:id', isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.params;
     await Post.findByIdAndDelete(id);
     req.flash('success', 'Successfully deleted post')
