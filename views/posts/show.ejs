@@ -1,15 +1,30 @@
-<% layout('layouts/boilerplate')%>
+<% layout('layouts/boilerplate') %>
 
-<body>
-    <h1><%= post.title %></h1>
-    <h2><%= post.author %></h2>
-    <p> <a href="/posts/<%= post._id %>/edit">Edit</a></p>
-    <p>
-        <form class="d-inline" action="/posts/<%=post._id%>?_method=DELETE" method="POST">
-            <button class="btn btn-danger">Delete</button>
-        </form>
-    </p>
-    <footer>
-        <a href="/posts">All posts</a>
-    </footer>
-</body>
+<div class="row">
+    <div class="col-10 offset-1"> <!-- Adjust column width to 4/5 of the screen -->
+        <div class="card mb-3">
+            <!-- Move the title to the top as an h1 element -->
+            <div class="card-body">
+                <h1 class="card-title font-weight-bold"><%= post.title %></h1>
+                <!-- Place the author just below as a muted h4 element -->
+                <h4 class="card-text text-muted"><%= post.author %></h4>
+            </div>
+            <img src="<%= post.image %>" class="card-img-top" alt="...">
+            <div class="card-body">
+                <p class="card-text"><%= post.text %></p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <!-- Adjust card structure as needed -->
+            </ul>
+            <div class="card-body">
+                <a class="card-link btn btn-info" href="/posts/<%= post._id %>/edit">Edit</a>
+                <form class="d-inline" action="/posts/<%= post._id %>?_method=DELETE" method="POST">
+                    <button class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+            <div class="card-footer text-muted">
+                2 days ago
+            </div>
+        </div>
+    </div>
+</div>

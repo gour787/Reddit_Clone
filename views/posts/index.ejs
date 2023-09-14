@@ -12,7 +12,6 @@
         align-items: flex-start;
     }
 
- 
     /* Style the button to display an arrow icon with black text */
     .post-buttons button {
         border: none;
@@ -31,6 +30,13 @@
     .post-buttons button span {
         padding: 0 5px; /* Add some spacing around the text if needed */
     }
+
+    /* Override the default link styles for post titles */
+    .post-title-link {
+        text-decoration: none; /* Remove underline */
+        color: inherit; /* Inherit the color from the parent element (black) */
+        font-weight: bold; /* Make it bold */
+    }
 </style>
 
 <h1>All Posts</h1>
@@ -48,9 +54,10 @@
             </div>
             <div class="col-md-8">
                 <div class="card-body">
-                    <h5 class="card-title">
-                        <a href="/posts/<%= post._id %>"><%= post.title %></a>
-                    </h5>
+                    <!-- Apply the custom class to the post title link -->
+                    <h1 class="card-title">
+                        <a href="/posts/<%= post._id %>" class="post-title-link"><%= post.title %></a>
+                    </h1>
                     <p class="card-text"><%= post.text %></p>
                     <p class="card-text">
                         <small class="text-muted"><%= post.author %></small>

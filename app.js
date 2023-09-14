@@ -19,7 +19,8 @@ app.use(methodOverride('_method'));
 
 mongoose.connect('mongodb://127.0.0.1:27017/reddit-clone', {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    // useFindAndModify: false
 
 });
 
@@ -37,17 +38,21 @@ app.get('/', (req, res) => {
 });
 
 
-
 app.get('/posts', async (req, res) => {
     const posts = await Post.find({});
     res.render('posts/index', { posts });
 });
+
+app.get('/posts/new', (req, res) => {
+    res.render('posts/new');
+})
 
 app.post('/posts', async (req, res) => {
     const post = new Post(req.body.post);
     await post.save();
     res.redirect(`/posts/${post._id}`);
 });
+
 
 app.get('/posts/:id', async (req, res) => {
     const post = await Post.findById(req.params.id);
