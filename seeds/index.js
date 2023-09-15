@@ -25,7 +25,7 @@ const seedDB = async () => {
             author: `65037d965396d9d7bfac50f8`,
             image: 'https://source.unsplash.com/collection/483251',
             text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-            community: 'r/funny',
+            community: 'funny',
             upvote: Math.floor(Math.random() * 100), // random number
             downvote: Math.floor(Math.random() * 100) // random number
         });
