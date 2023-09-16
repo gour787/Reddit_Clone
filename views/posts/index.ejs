@@ -19,17 +19,19 @@
         padding: 5px;
         cursor: pointer;
         color: black; /* Set the text color to black */
+        
+
     }
 
     /* Style the arrow icons */
     .post-buttons button i {
         font-size: 20px; /* Adjust the icon size as needed */
+        display: inline-block; /* This makes the vote buttons appear on the same line */
+    margin-right: 10px; /* Add some spacing between the buttons */
     }
 
-    /* Style for the Upvotes and Downvotes text */
-    .post-buttons button span {
-        padding: 0 5px; /* Add some spacing around the text if needed */
-    }
+
+
 
     /* Override the default link styles for post titles */
     .post-title-link {
@@ -37,6 +39,8 @@
         color: inherit; /* Inherit the color from the parent element (black) */
         font-weight: bold; /* Make it bold */
     }
+
+
 </style>
 
 <h1>All Posts</h1>
@@ -63,20 +67,24 @@
                         <small class="text-muted">u/<%= post.author.username %></small>
                     </p>
                 </div>
-                <div class="card-footer post-details">
-                    <form class="d-inline" action="/posts/<%= post._id %>/vote?_method=PUT" method="POST">
-                        <div class="post-buttons">
-                            <button class="btn btn-success upvote-button" name="upvote" value="<%= post.upvote %>">
+                <div class="card-footer post-details d-flex">
+                    <form class="d-inline" action="/posts/<%= post._id %>/upvote?_method=PUT" method="POST">
+                        <span class="post-buttons">
+                            <button class="btn btn-success" name="upvote" value="<%= post.upvote %>">
                                 <i class="fas fa-arrow-up"></i> <span class="vote-count"><%= post.upvote %></span>
                             </button>
-                            <button class="btn btn-danger downvote-button" name="downvote" value="<%= post.downvote %>">
+                        </span>
+                    </form>
+                
+                    <form class="d-inline" action="/posts/<%= post._id %>/downvote?_method=PUT" method="POST">
+                        <span class="post-buttons">
+                            <button class="btn btn-danger" name="downvote" value="<%= post.downvote %>">
                                 <i class="fas fa-arrow-down"></i> <span class="vote-count"><%= post.downvote %></span>
                             </button>
-                        </div>
+                        </span>
                     </form>
-                    
-                    
                 </div>
+                
         
             
                 </div>
@@ -84,7 +92,6 @@
         </div>
     </div>
 <% } %>
-
 
 
 
