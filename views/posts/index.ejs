@@ -64,12 +64,27 @@
                     </p>
                 </div>
                 <div class="card-footer post-details">
-                    <div class="post-buttons">
-                        <button class="btn btn-success"><i class="fas fa-arrow-up"></i><span>Upvotes:</span> <%= post.upvote %></button>
-                        <button class="btn btn-danger"><i class="fas fa-arrow-down"></i><span>Downvotes:</span> <%= post.downvote %></button>
-                    </div>
+                    <form class="d-inline" action="/posts/<%= post._id %>/vote?_method=PUT" method="POST">
+                        <div class="post-buttons">
+                            <button class="btn btn-success upvote-button" name="upvote" value="<%= post.upvote %>">
+                                <i class="fas fa-arrow-up"></i> <span class="vote-count"><%= post.upvote %></span>
+                            </button>
+                            <button class="btn btn-danger downvote-button" name="downvote" value="<%= post.downvote %>">
+                                <i class="fas fa-arrow-down"></i> <span class="vote-count"><%= post.downvote %></span>
+                            </button>
+                        </div>
+                    </form>
+                    
+                    
+                </div>
+        
+            
                 </div>
             </div>
         </div>
     </div>
 <% } %>
+
+
+
+

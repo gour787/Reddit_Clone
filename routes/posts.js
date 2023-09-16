@@ -6,6 +6,7 @@ const { postSchema } = require('../schema.js');
 const ExpressError = require('../utils/ExpressError');
 const Post = require('../models/post');
 const { isLoggedIn, isAuthor, validatePost } = require('../middleware');
+const { type } = require('os');
 
 
 
@@ -57,11 +58,29 @@ router.put('/:id', isLoggedIn, isAuthor, validatePost, catchAsync(async (req, re
     return res.redirect(`/posts/${post._id}`)
 }));
 
+router.put('/:id/vote', catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const { upvote, downvote } = req.body;
+    console.log(upvote);
+
+    // Parse values as integers
+    const parsedUpvote = parseInt(upvote) +1;
+
+    // Use findByIdAndUpdate to update the values in the database
+    await Post.findByIdAndUpdate(id, { upvote: parsedUpvote});
+
+    return res.redirect(`/posts`)
+}));
+
+
+
+
 router.delete('/:id', isLoggedIn, isAuthor, catchAsync(async (req, res) => {
     const { id } = req.params;
     await Post.findByIdAndDelete(id);
     req.flash('success', 'Successfully deleted post')
     res.redirect('/posts');
 }));
+
 
 module.exports = router;
