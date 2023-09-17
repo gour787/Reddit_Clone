@@ -16,6 +16,7 @@ const userRoutes = require('./routes/users');
 const postRoutes = require('./routes/posts');
 const commentRoutes = require('./routes/comments');
 const dbURL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/reddit-clone'
+const secretKey = process.env.SECRET_KEY;
 if(process.env.NODE_ENV != 'production'){
     require('dotenv').config();
 }
@@ -45,7 +46,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 const store = new MongoStore({
     url: dbURL,
     touchAfter: 24 * 60 * 60,
-    secret: 'thisshouldbeabettersecret!',
+    secret: secretKey,
     mongoOptions: {
         useUnifiedTopology: true,
     }
@@ -54,7 +55,7 @@ const store = new MongoStore({
 
 const sessionConfig = {
     store,
-    secret: 'secretfortestenv',
+    secret: secretKey,
     resave: false,
     saveUninitialized: true,
     cookie: {
