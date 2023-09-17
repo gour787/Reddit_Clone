@@ -1,9 +1,9 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
-const MongoDBStore = require('connect-mongo')(session);
 const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
@@ -15,21 +15,9 @@ const User = require('./models/user');
 const userRoutes = require('./routes/users');
 const postRoutes = require('./routes/posts');
 const commentRoutes = require('./routes/comments');
-const dbURL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/reddit-clone'
-if(process.env.NODE_ENV != 'production'){
-    require('dotenv').config();
-}
+const dbURL = process.env.DB_URL;
 
-// mongoose.connect(dbURL, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-// });
 
-// const db = mongoose.connection;
-// db.on("error", console.error.bind(console, "connection error:"));
-// db.once("open", () => {
-//     console.log("Database connected");
-// });
 
 
 const app = express();
@@ -42,20 +30,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')))
 
-const secret = process.env.SECRET_KEY || 'thisshouldbeabettersecret!';
+const secret = process.env.SECRET_KEY;
 
-const store = new MongoDBStore({
-    url: dbURL,
-    secret,
-    touchAfter: 24 * 60 * 60
-});
-
-store.on("error", function (e) {
-    console.log("SESSION STORE ERROR", e)
-})
 
 const sessionConfig = {
-    store,
+
     name: 'session',
     secret,
     resave: false,
