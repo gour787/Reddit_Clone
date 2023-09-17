@@ -3,7 +3,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
+const MongoDBStore = require('connect-mongo')(session);
 const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
@@ -42,23 +42,27 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')))
 
-const store = new MongoStore({
+const secret = process.env.SECRET_KEY || 'thisshouldbeabettersecret!';
+
+const store = new MongoDBStore({
     url: dbURL,
-    touchAfter: 24 * 60 * 60,
-    secret: 'thisshouldbeabettersecret!',
-    mongoOptions: {
-        useUnifiedTopology: true,
-    }
+    secret,
+    touchAfter: 24 * 60 * 60
 });
 
+store.on("error", function (e) {
+    console.log("SESSION STORE ERROR", e)
+})
 
 const sessionConfig = {
     store,
-    secret: 'secretfortestenv',
+    name: 'session',
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
+        // secure: true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
