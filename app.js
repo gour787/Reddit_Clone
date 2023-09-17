@@ -3,31 +3,34 @@ const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 const flash = require('connect-flash');
-const Joi = require('joi');
-const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 
+
 const userRoutes = require('./routes/users');
 const postRoutes = require('./routes/posts');
 const commentRoutes = require('./routes/comments');
+const dbURL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/reddit-clone'
+if(process.env.NODE_ENV != 'production'){
+    require('dotenv').config();
+}
 
+// mongoose.connect(dbURL, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+// });
 
+// const db = mongoose.connection;
+// db.on("error", console.error.bind(console, "connection error:"));
+// db.once("open", () => {
+//     console.log("Database connected");
+// });
 
-mongoose.connect('mongodb://localhost:27017/reddit-clone', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
-
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", () => {
-    console.log("Database connected");
-});
 
 const app = express();
 
@@ -39,7 +42,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')))
 
+const store = new MongoStore({
+    url: dbURL,
+    touchAfter: 24 * 60 * 60,
+    secret: 'thisshouldbeabettersecret!',
+    mongoOptions: {
+        useUnifiedTopology: true,
+    }
+});
+
+
 const sessionConfig = {
+    store,
     secret: 'secretfortestenv',
     resave: false,
     saveUninitialized: true,
@@ -90,7 +104,18 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('error', { err })
 })
 
-app.listen(3000, () => {
-    console.log('Serving on port 3000')
-    
-})
+const start = async() => {
+    try{
+        await mongoose.connect(dbURL);
+        app.listen(3000, () => {
+            console.log('Serving on port 3000')
+            
+        })
+    } catch(err ) {
+        console.log(err.message)
+
+    }
+
+
+}
+start();
