@@ -2,7 +2,7 @@
 
 <style>
     .post-image {
-        max-height: 200px; 
+        max-height: 200px;
         width: auto;
     }
 
@@ -19,19 +19,14 @@
         padding: 5px;
         cursor: pointer;
         color: black; /* Set the text color to black */
-        
-
     }
 
     /* Style the arrow icons */
     .post-buttons button i {
         font-size: 20px; /* Adjust the icon size as needed */
         display: inline-block; /* This makes the vote buttons appear on the same line */
-    margin-right: 10px; /* Add some spacing between the buttons */
+        margin-right: 10px; /* Add some spacing between the buttons */
     }
-
-
-
 
     /* Override the default link styles for post titles */
     .post-title-link {
@@ -51,18 +46,10 @@
 .post-title-link:hover {
     color: blue;
 }
-
-
 </style>
 
-<h1>All Posts</h1>
+<h1>Searched Posts</h1>
 
-<% if (!currentUser) { %>
-    <!-- Display a message for users who are not logged in -->
-    <div class="alert alert-warning" role="alert">
-        You are not logged in. Please <a href="/login">log in</a> or <a href="/register">create an account</a> to participate.
-    </div>
-<% } %>
 <% for (let post of posts) { %>
     <div class="card mb-3">
         <div class="card-header">
@@ -83,31 +70,24 @@
                         <small class="text-muted">u/<%= post.author.username %></small>
                     </p>
                 </div>
-                <div class="card-footer post-details d-flex">
-                    <form class="d-inline" action="/posts/<%= post._id %>/upvote?_method=PUT" method="POST">
+                <div >
+                    <form  action="/posts/<%= post._id %>/upvote?_method=PUT&popular=true" method="POST">
                         <span class="post-buttons">
-                            <button class="btn btn-success" name="upvote" value="<%= post.upvote %>">
+                            <button class="btn btn-success upvote-button" name="upvote" value="<%= post.upvote %>">
                                 <i class="fas fa-arrow-up"></i> <span class="vote-count"><%= post.upvote %></span>
                             </button>
                         </span>
                     </form>
                 
-                    <form class="d-inline" action="/posts/<%= post._id %>/downvote?_method=PUT" method="POST">
+                    <form  action="/posts/<%= post._id %>/downvote?_method=PUT&popular=true" method="POST">
                         <span class="post-buttons">
-                            <button class="btn btn-danger" name="downvote" value="<%= post.downvote %>">
+                            <button class="btn btn-danger downvote-button" name="downvote" value="<%= post.downvote %>">
                                 <i class="fas fa-arrow-down"></i> <span class="vote-count"><%= post.downvote %></span>
                             </button>
                         </span>
                     </form>
                 </div>
-                
-        
-            
-                </div>
             </div>
         </div>
     </div>
 <% } %>
-
-
-

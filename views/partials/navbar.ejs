@@ -1,8 +1,8 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <!-- Reddit Logo (You can replace this with your own logo) -->
-      <a class="navbar-brand" href="#">
-        <img src="/../../public/reddit-logo.png" alt="Reddit Logo" height="30">
+      <a class="navbar-brand" href="/posts">
+        <img src="https://www.iconpacks.net/icons/2/free-reddit-logo-icon-2436-thumb.png" alt="Reddit Logo" height="30">
       </a>
       <!-- Navbar Toggler Button -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -11,20 +11,19 @@
       <!-- Navbar Links -->
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-          <a class="nav-link active" aria-current="page" href="/posts/home">Home</a>
-          <a class="nav-link" href="#">Popular</a>
+          <a class="nav-link active" aria-current="page" href="/home">Home</a>
+          <a class="nav-link" href="/posts/popular">Popular</a>
           <a class="nav-link" href="/posts">All</a>
-          <a class="nav-link" href="#">Random</a>
-          <a class="nav-link" href="#">Subreddits</a>
+          <a class="nav-link" href="/posts/random">Random</a>
           <a class="nav-link" href="/posts/new">New Post</a>
         </div>
       </div>
       <!-- Search Bar -->
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search Communities! " aria-label="Search">
-        <button class="btn btn-outline-light" type="submit">Search </button>
+      <form class="d-flex" action="/posts/search" method="GET"> <!-- Updated action attribute -->
+        <input class="form-control me-2" type="search" name="community" placeholder="Search Communities!" aria-label="Search">
+        <button class="btn btn-outline-dark" type="submit">Search</button>
       </form>
-    </div>
+      
 
     <div class="navbar-nav ms-auto">
       <% if(!currentUser) {%>

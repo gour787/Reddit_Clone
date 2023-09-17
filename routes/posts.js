@@ -11,6 +11,10 @@ const { type } = require('os');
 
 
 router.get('/', catchAsync(async (req, res) => {
+    if (!req.user) {
+        // Set a flash message with a warning type
+        req.flash('warning', 'You are not logged in. Please log in or create an account to participate.');
+    }
     const posts = await Post.find({}).populate('author');
     res.render('posts/index', { posts })
 }));
@@ -28,16 +32,72 @@ router.post('/', isLoggedIn, validatePost, catchAsync(async (req, res, next) => 
     res.redirect(`/posts/${post._id}`)
 }))
 
-// Define a route to display popular posts
 
 router.get('/popular', async (req, res) => {
+
+    if (!req.user) {
+        // Set a flash message with a warning type
+        req.flash('warning', 'You are not logged in. Please log in or create an account to participate.');
+    }
     try {
-      // Sort posts by upvote count in descending order and populate the 'author' field
+      
       const posts = await Post.find().sort({ upvote: 'desc' }).populate('author');
-      res.render('posts/popular', { posts }); // Replace 'popular' with the actual path to your popular.ejs file
+      res.render('posts/popular', { posts }); 
     } catch (err) {
       console.error(err);
-      res.status(500).send('Internal Server Error'); // Handle errors gracefully
+      res.status(500).send('Internal Server Error'); 
+    }
+  });
+
+  router.get('/random', catchAsync(async (req, res) => {
+    try {
+      // Get the total number of posts
+      const count = await Post.countDocuments();
+  
+      // Generate a random number within the range of available posts
+      const randomIndex = Math.floor(Math.random() * count);
+  
+      // Find a post by skipping to the random index and populate it with comments and authors
+      const randomPost = await Post.findOne().skip(randomIndex)
+        .populate({
+          path: 'comments',
+          populate: {
+            path: 'author'
+          }
+        })
+        .populate('author');
+  
+      if (!randomPost) {
+        return res.status(404).send('No posts found.');
+      }
+  
+      // Render the random post page with the fetched post
+      res.render('posts/show', { post: randomPost });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+    }
+  }));
+  
+
+  router.get('/search', async (req, res) => {
+    try {
+      const { community } = req.query;
+      let posts;
+  
+      // Check if a community name was provided in the query
+      if (community) {
+        posts = await Post.find({ community }).populate('author');
+      } else {
+        // If no community name provided, retrieve all posts
+        posts = await Post.find().populate('author');
+      }
+  
+      // Render the posts page with the filtered or all posts
+      res.render('posts/results', { posts }); // Remove the leading slash before "posts/results"
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
     }
   });
   
@@ -74,9 +134,10 @@ router.put('/:id', isLoggedIn, isAuthor, validatePost, catchAsync(async (req, re
     return res.redirect(`/posts/${post._id}`)
 }));
 
-router.put('/:id/upvote', catchAsync(async (req, res) => {
+router.put('/:id/upvote', isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.params;
     const { upvote } = req.body;
+    const isPopular = req.query.popular === 'true'; // Check for the 'popular' query parameter
   
     // Parse values as integers
     const parsedUpvote = parseInt(upvote) + 1;
@@ -85,30 +146,37 @@ router.put('/:id/upvote', catchAsync(async (req, res) => {
     await Post.findByIdAndUpdate(id, { upvote: parsedUpvote });
   
     // Check if the URL does not contain '/popular'
-    if (!req.originalUrl.includes('/popular')) {
-      return res.redirect('/posts');
-    } else {
-      return res.redirect('/posts/popular');
-    }
+    if (isPopular) {
+        res.redirect('/posts/popular');
+      } else {
+        res.redirect('/posts');
+      }
   }));
+
   
-  router.put('/:id/downvote', catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const { downvote } = req.body;
   
-    // Parse values as integers
-    const parsedDownvote = parseInt(downvote) + 1;
   
-    // Use findByIdAndUpdate to update the values in the database
-    await Post.findByIdAndUpdate(id, { downvote: parsedDownvote });
+router.put('/:id/downvote', isLoggedIn, catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { downvote } = req.body;
+  const isPopular = req.query.popular === 'true'; // Check for the 'popular' query parameter
+
+  // Parse values as integers
+  const parsedDownvote = parseInt(downvote) + 1;
+
+  // Use findByIdAndUpdate to update the values in the database
+  await Post.findByIdAndUpdate(id, { downvote: parsedDownvote });
+
+  // Check if it's coming from the '/popular' page
+  if (isPopular) {
+    res.redirect('/posts/popular');
+  } else {
+    res.redirect('/posts');
+  }
+}));
+
   
-    // Check if the URL does not contain '/popular'
-    if (!req.originalUrl.includes('/popular')) {
-      return res.redirect('/posts');
-    } else {
-      return res.redirect('/posts/popular');
-    }
-  }));
+  
   
 
 
