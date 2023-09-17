@@ -4,13 +4,14 @@ const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
 const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
-
+const PORT = process.env.PORT || 3000;
 
 const userRoutes = require('./routes/users');
 const postRoutes = require('./routes/posts');
@@ -32,20 +33,23 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 const secret = process.env.SECRET_KEY;
 
-
-const sessionConfig = {
-
+const store = new MongoDBStore({
+    uri: dbURL, 
+    collection: 'sessions', 
+    expires: 1000 * 60 * 60 * 24 * 7, // 7 days
+  });
+  const sessionConfig = {
     name: 'session',
-    secret,
+    secret: secret, // Your secret key
     resave: false,
     saveUninitialized: true,
     cookie: {
-        httpOnly: true,
-        // secure: true,
-        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-        maxAge: 1000 * 60 * 60 * 24 * 7
-    }
-}
+      httpOnly: true,
+      expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    },
+    store: store, // Use the MongoDB store
+  };
 app.use(session(sessionConfig))
 app.use(flash());
 
@@ -90,8 +94,8 @@ app.use((err, req, res, next) => {
 const start = async() => {
     try{
         await mongoose.connect(dbURL);
-        app.listen(3000, () => {
-            console.log('Serving on port 3000')
+        app.listen(PORT, () => {
+            console.log(`Serving on port ${PORT}`)
             
         })
     } catch(err ) {
