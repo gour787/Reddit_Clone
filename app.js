@@ -79,11 +79,6 @@ app.get('/home', (req, res) => {
     res.render('home')
 });
 
-app.get('/logout', (req, res) => {
-    req.logout(); // Clear the user's session or tokens
-    res.redirect('/'); // Redirect to the homepage or any other desired route
-});
-
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))
