@@ -1,9 +1,29 @@
-<% layout('layouts/boilerplate')%>
-<div class="row">
-    <div class="col-6 offset-3">
-        <div class="alert alert-danger" role="alert">
-            <h4 class="alert-heading"><%=err.message%></h4>
-            <p><%= err.stack %></p>
-        </div>
+
+
+<% layout('layouts/boilerplate') %>
+
+<div class="card">
+    <div class="card-body">
+        <h1>Error</h1>
+        <p>Redirecting to All Posts in <span id="countdown">4</span> seconds...</p>
     </div>
 </div>
+
+<script>
+    // Countdown timer
+    let countdown = 4;
+    const countdownElement = document.getElementById('countdown');
+
+    const updateCountdown = () => {
+        countdown--;
+        countdownElement.textContent = countdown;
+
+        if (countdown <= 0) {
+            // Redirect to the All Posts page after countdown
+            window.location.href = '/posts'; // Replace with your actual route
+        }
+    };
+
+    // Update the countdown every second
+    setInterval(updateCountdown, 1000);
+</script>

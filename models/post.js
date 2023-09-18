@@ -1,14 +1,20 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const Comment = require('./comment')
+const Comment = require('./comment');
 
 const PostSchema = new Schema({
     title: String,
     image: String,
     community: String,
     text: String,
-    upvote: Number,
-    downvote: Number,
+    upvote: {
+        type: Number,
+        default: 0, // Set the default value to 0
+    },
+    downvote: {
+        type: Number,
+        default: 0, // Set the default value to 0
+    },
     author: {
         type: Schema.Types.ObjectId,
         ref: 'User'
@@ -29,6 +35,6 @@ PostSchema.post('findOneAndDelete', async function (doc) {
             }
         })
     }
-})
+});
 
 module.exports = mongoose.model('Post', PostSchema);
