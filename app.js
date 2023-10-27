@@ -11,7 +11,7 @@ const methodOverride = require('method-override');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 const userRoutes = require('./routes/users');
 const postRoutes = require('./routes/posts');
